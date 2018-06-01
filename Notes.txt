@@ -1,0 +1,10 @@
+Climate: San Juan has a tropical monsoon climate -> visible in the data, spikes in disease always late in the year: 
+Hurricane/Monsoon season.
+
+Iquitos: Always hot and wet, except in Winter (June-August, because south of the equator!) (U-Curve on our calendar)
+
+Mosquitos: 5-40 days egg to adult
+
+Holt-Winters
+
+We should train a bit and try one first upload
