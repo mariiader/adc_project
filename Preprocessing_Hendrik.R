@@ -9,15 +9,16 @@ library(MASS)
 library(ggplot2)
 library(zoo)
 library(forecast)
+library(corrgram)
 
 #Import as Time Series
 
 feats <- read.csv(
-  "C:/Users/hendr/Documents/Uni_Konstanz/Master/Semester_4/Challenge/data/dengue_features_train.csv",
+  "./data/dengue_features_train.csv",
   sep=",", stringsAsFactors = F)
 
 labels <- read.csv(
-  "C:/Users/hendr/Documents/Uni_Konstanz/Master/Semester_4/Challenge/data/dengue_labels_train.csv",
+  "./data/dengue_labels_train.csv",
   sep=",", stringsAsFactors = F) 
 
 #Concat
@@ -72,6 +73,11 @@ tsSj <- as.ts(zooSjOut, frequency = c(7,52))
 plot.zoo(zooSj$ndvi_ne, ylim = c(0,1))
 plot.zoo(zooSjOut$ndvi_se, ylim = c(0,1)) #
 plot.zoo(zooSjOut$reanalysis_avg_temp_k, ylim = c(295,305))
+
+
+########### Imputing Weather NAs ##############
+
+
 
 
 #########################

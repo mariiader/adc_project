@@ -12,9 +12,11 @@
 # Correlogramms -> Lags if differ
 
 
+# Mean with Standard Deviation for all variables
 sapply(trainSj, function(x){print(c(mean(x, na.rm=TRUE), sqrt(var(x, na.rm = TRUE))))})
 
 
+# Mean, Max and Min for the Presentation Plots
 meanAir <- statV(trainIq, "reanalysis_air_temp_k", mean)
 maxAir <- statV(trainIq, "reanalysis_air_temp_k", max)
 minAir <- statV(trainIq, "reanalysis_air_temp_k", min)
@@ -28,11 +30,13 @@ maxCase <- statV(trainIq, "total_cases", max)
 minCase <- statV(trainIq, "total_cases", min)
 
 
+# Corrgram
+
+corrgram(trainSj, upper.panel=panel.cor, main="San Juan")[,23]
+corrgram(trainIq, upper.panel=panel.cor, main="Iquitos")
 
 
-
-
-#Some summary statistics
+#Some other summary statistics
 summary(train$total_cases)
 with(trainSj, plot(total_cases ~ weekofyear))
 aggregate(train$total_cases, by=list(train$year), FUN = mean)
@@ -41,7 +45,7 @@ with(train, plot(total_cases ~ reanalysis_specific_humidity_g_per_kg))
 summary(lm(train$total_cases ~ train$reanalysis_relative_humidity_percent))
 
 
-# Lag:
+# Playing around with lag (-> Functions_Hendrik):
 
 Sj <- lagF(trainSj, c(5:25), 100)
 Iq <- lagF(trainIq, c(5:25), 100) 
