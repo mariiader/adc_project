@@ -1,5 +1,3 @@
-https://www.youtube.com/watch?v=1RPoymt3Jx4
-
 https://shaulab.github.io/DrivenData/DengAI/Benchmark.html
 
 The features in this dataset

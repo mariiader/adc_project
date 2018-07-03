@@ -1,13 +1,9 @@
 # Pred vs. True
 
-plotComp <- function(trainSet, pred){
-  verticals <- as.data.frame(which(trainSet$weekofyear==1))
-  thisPlot <- ggplot(data=trainSet, aes(x=ID)) +
+plotComp <- function(true, pred){
+  thisPlot <- ggplot(data = as.data.frame(cbind(true,pred)), aes(x=seq(1,length(pred),1))) +
     scale_x_continuous(expand = c(0, 0)) + scale_y_continuous(expand = c(0, 0)) +
-    geom_line(aes(y=total_cases), color='blue') + geom_line(aes(y=pred), color='red') #+ 
-    #geom_vline(aes(xintercept = verticals))
-  
-  print(mean((trainSet$total_cases-pred)^2 , na.rm=T))
+    geom_line(aes(y=true), color='blue') + geom_line(aes(y=pred), color='red') #+ 
   thisPlot
 }
 
