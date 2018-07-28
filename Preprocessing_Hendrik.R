@@ -11,6 +11,7 @@ library(zoo)
 library(forecast)
 library(corrgram)
 library(dynlm)
+library(astsa)
 
 #Import as Time Series
 
@@ -108,19 +109,3 @@ dfTiqOut$city <- "iq"
 
 rm(indx, zooIq, zooIqOut, zooSj, zooSjOut, zooTiq, zooTiqOut, zooTsj, zooTsjOut)
 
-# as ts??? with season
-
-plot.zoo(zooSj$ndvi_ne, ylim = c(0,1))
-plot.zoo(zooSjOut$ndvi_se, ylim = c(0,1)) #
-plot.zoo(zooSjOut$reanalysis_avg_temp_k, ylim = c(295,305))
-
-
-########### Imputing Weather NAs ##############
-MissIq <- lapply(trainIq, function(x) which(is.na(x)))
-MissSj <- lapply(trainSj, function(x) which(is.na(x)))
-
-
-
-#########################
-
-plotComp(trainIqImp, trainIqImp$pred)

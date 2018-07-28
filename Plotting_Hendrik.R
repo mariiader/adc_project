@@ -43,3 +43,7 @@ plotMinMax <- function(mean, min, max, ylabel){
     xlab("Week of the Year") + ylab(ylabel)
   minMaxPlot
 }
+
+
+
+###

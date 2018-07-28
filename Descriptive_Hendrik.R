@@ -142,31 +142,78 @@ summary(mNBL <- glm.nb(total_cases[12:936] ~ reanalysis_dew_point_temp_k[3:927] 
                         station_min_temp_c[1:925] + 
                         total_cases[11:935], data=dfSjOut))
 
+predNBSjLag <- predict(mNBL, newdata = dfSjOutLag[762:925,], type = "response")
+
+
+
+# DynLm
+
+dfSjOutShort <- dfSjOut[500:936,]
+dfIqOutShort <- dfSjOut[1:300,]
 
 summary(mDynLag <- dynlm(total_cases ~ L(reanalysis_dew_point_temp_k, 9) + 
                          L(reanalysis_specific_humidity_g_per_kg, 9) +
                          L(station_avg_temp_c, 11) + 
                          L(station_min_temp_c, 11) +
-                         year 
-                         #L(reanalysis_precip_amt_kg_per_m2, 2) #+
-                         #L(total_cases, 1)
-                         , data=dfSjOut[1:750,]))
+                         #year #+
+                          L(reanalysis_precip_amt_kg_per_m2, 2) #+
+                         , data=dfSjOutShort))
 
-dfSjOutLag <- cbind(dfSjOut[10:934,14],
-                    dfSjOut[3:927, c(11,17)], 
-                    dfSjOut[1:925, c(19,22)], 
-                    dfSjOut[11:935,c(2,24)])
+
+summary(mDynLagIq <- dynlm(total_cases ~ L(reanalysis_dew_point_temp_k, 11) + 
+                           L(reanalysis_specific_humidity_g_per_kg, 11) +
+                           L(station_avg_temp_c, 14) + 
+                           L(station_min_temp_c, 10) +
+                         #year #+
+                         L(reanalysis_precip_amt_kg_per_m2, 2) #+
+                         # L(total_cases, 1)
+                         , data=dfIqOut)) # Short
+
+dfSjOutLag <- cbind(dfSjOut[10:934,14], #precip
+                    dfSjOut[3:927, c(11,17)], #dew humid
+                    dfSjOut[1:925, c(19,22)],  # avg min
+                    dfSjOut[12:936,c(2,3,24)]) # year week total
 names(dfSjOutLag)[1] <- "reanalysis_precip_amt_kg_per_m2"
-#names(dfSjOutLag)[6] <- "total_cases"
 
-predNBSjLag <- predict(mNBL, newdata = dfSjOutLag, type = "response")
+dfIqOutLag <- cbind(dfIqOut[11:515,14], #precip
+                    dfIqOut[4:508, c(11,17)], #dew humid
+                    dfIqOut[1:505, c(19)], # avg
+                    dfIqOut[5:509, c(19)], #min
+                    dfIqOut[15:519,c(2,3,24)]) # year week total
+names(dfIqOutLag)[1] <- "reanalysis_precip_amt_kg_per_m2"
+names(dfIqOutLag)[4] <- "station_avg_temp_c"
+names(dfIqOutLag)[5] <- "station_min_temp_c"
 
-predDyn <- predict(mDynLag, newdata = dfSjOutLag[762:925,], type = "response")
+dfSjOutLagShort <- dfSjOutLag[749:761,1:8]
+dfSjOutShort$total_cases[13] <- NA
 
-plotComp(c(dfSjOut[1:936,24],0), 
-         c(rep(0,10), predDyn))
+for (i in 762:925) {
+  tc <- predict(mDynLag, newdata = dfSjOutLagShort)[13]
+  df <- data.frame(c(dfSjOutLag[i,1:7] , tc))
+  names(df) <- names(dfSjOutLagShort)
+  dfSjOutLagShort <- rbind(dfSjOutLagShort, df)
+}
+
+#LSTM
+
+predDynSj <- predict(mDynLag, newdata = dfSjOut, type = "response")
+predDynIq <- predict(mDynLagIq, newdata = dfIqOutLag[301:519,1:8], type = "response")
+predDynIq <- predict(mDynLagIq, newdata = dfIqOut, type = "response")
+
+plotComp(dfSjOut[12:936,24], 
+         log(predNBSjLag[1:925]))
+
+plotComp(c(dfSjOut[,24]), 
+         predDynSj)
+
+plotComp(c(dfIqOut$total_cases), 
+         predDynIq)
 
 plotComp(c(dfSjOut[773:936,24]), 
-         predDyn+8)
+         dfSjOutLagShort$total_cases[14:177])
 
-mean(abs(dfSjOut[773:936,24]-(predDyn+8)))
+mean(abs(dfSjOut[,24]-(predDyn)))
+mean(abs(dfSjOut[772:936,24]-(predNBSjLag[761:925])))
+mean(abs(dfSjOut[773:936,24]-dfSjOutLagShort$total_cases[14:177]))
+mean(abs(dfSjOut[773:936,24]-rep(15,164)))
+mean(abs(dfIqOut$total_cases-predDynIq))

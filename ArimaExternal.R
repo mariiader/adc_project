@@ -86,3 +86,11 @@ ArimaIqExLag <- auto.arima(tsIq[12:519],
                         approximation = FALSE, 
                         seasonal  = TRUE,
                         xreg = dfIqOutLag)
+
+
+### SARIMA ###
+
+
+
+mSarima <- sarima(tsSj[1:750], p=2 , d=0 , q=2 , P=1, D=1, Q=52)
+forecast(mSarima)

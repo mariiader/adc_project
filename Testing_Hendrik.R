@@ -47,4 +47,22 @@ write.csv(submit, "./SubmissionArima3.csv", row.names = FALSE)
 #dynlm
 
 
-predict(mDynLag, dfTsjOutLag, type="response")
+dymSjTest <- floor(predict(mDynLag, rbind(dfSjOut[900:936,1:23] , dfTsjOut), type="response"))[38:297]
+dymSjTest[which(dymSjTest<0)] <- 0
+dymIqTest <- floor(predict(mDynLagIq, rbind(dfIqOut[500:519,1:23] , dfTiqOut), type="response"))[21:176]
+dymIqTest[which(dymIqTest<0)] <- 0
+
+submit$total_cases <- c(dymSjTest, dymIqTest)
+
+write.csv(submit, "./SubmissionDynLM2.csv", row.names = FALSE)
+
+plotComp(c(dfSjOut$total_cases, rep(0,260)), 
+         c(predDyn, dymSjTest))
+
+plotComp(c(dfIqOut$total_cases, rep(0,156)), 
+         c(predDynIq, dymIqTest))
+
+plot(c(dfIqOut$reanalysis_dew_point_temp_k, dfTiqOut$reanalysis_dew_point_temp_k))
+plot(c(dfIqOut$reanalysis_specific_humidity_g_per_kg, dfTiqOut$reanalysis_specific_humidity_g_per_kg))
+plot(c(dfIqOut$station_avg_temp_c, dfTiqOut$station_avg_temp_c))
+plot(c(dfIqOut$station_min_temp_c, dfTiqOut$station_min_temp_c))
