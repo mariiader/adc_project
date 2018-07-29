@@ -32,8 +32,8 @@ minCase <- statV(trainIq, "total_cases", min)
 
 # Corrgram
 
-corrgram(trainSj, upper.panel=panel.cor, main="San Juan")
-corrgram(trainIq, upper.panel=panel.cor, main="Iquitos")
+corrgram(dfSjOut, upper.panel=panel.cor, main="San Juan")
+corrgram(dfIqOut, upper.panel=panel.cor, main="Iquitos")
 
 lagtest <- corMatrix(dfSjOut)
 lagtest <- corMatrix(dfIqOut)
@@ -54,9 +54,9 @@ for (i in 1:23){
   maxvec <- c(maxvec,which(lagtest[,i]==max(lagtest[,i])))
 }
 
-pdfhandle <- "./lagIq.pdf"
+pdfhandle <- "./lagSjSpike.pdf"
 pdf(file=pdfhandle)
-for (i in seq(1,23,3)){
+for (i in seq(1,24,3)){
   par(mfrow=c(3,1))
   plot(lagtest[,i]^2, ylab=colnames(lagtest[0,])[i])
   plot(lagtest[,i+1]^2, ylab=colnames(lagtest[0,])[i+1])
@@ -148,7 +148,7 @@ predNBSjLag <- predict(mNBL, newdata = dfSjOutLag[762:925,], type = "response")
 
 # DynLm
 
-dfSjOutShort <- dfSjOut[500:936,]
+dfSjOutShort <- dfSjOut[500:700,]
 dfIqOutShort <- dfSjOut[1:300,]
 
 summary(mDynLag <- dynlm(total_cases ~ L(reanalysis_dew_point_temp_k, 9) + 
@@ -196,7 +196,7 @@ for (i in 762:925) {
 
 #LSTM
 
-predDynSj <- predict(mDynLag, newdata = dfSjOut, type = "response")
+predDynSj <- predict(mDynLag, newdata = dfSjOut[701:936,], type = "response")
 predDynIq <- predict(mDynLagIq, newdata = dfIqOutLag[301:519,1:8], type = "response")
 predDynIq <- predict(mDynLagIq, newdata = dfIqOut, type = "response")
 

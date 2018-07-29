@@ -1,10 +1,19 @@
-Climate: San Juan has a tropical monsoon climate -> visible in the data, spikes in disease always late in the year: 
-Hurricane/Monsoon season.
+- Data description
+- Problem description
 
-Iquitos: Always hot and wet, except in Winter (June-August, because south of the equator!) (U-Curve on our calendar)
+Exploratory analysis
 
-Mosquitos: 5-40 days egg to adult
+Lag analysis
 
+What did we try - various Arima models
+Arima with Lag
 Holt-Winters
+Poisson
+Tree-based
 
-We should train a bit and try one first upload
+-> Training on the sample isn't the problem ! Some examples
+-> Maybe real life
+
+000
+
+Final rank // number
