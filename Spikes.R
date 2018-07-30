@@ -52,13 +52,13 @@ corrgram(dfSjOut10, upper.panel=panel.cor, main="San Juan")
 
 #####
 
-dfSjOutLag <- cbind(dfSjOut[10:934,14], #precip
+dfSjOutLagSpike <- cbind(dfSjOut[10:934,14], #precip
                     #dfSjOut[10:934,14], #total lagged
                     dfSjOut[3:927, c(11,17)], #dew humid
                     dfSjOut[1:925, c(19,22,24)],  # avg min
                     dfSjOut[12:936,c(2,3,24,25)]) # year week total
-names(dfSjOutLag)[1] <- "reanalysis_precip_amt_kg_per_m2"
-names(dfSjOutLag)[6] <- "total_cases_Lag"
+names(dfSjOutLagSpike)[1] <- "reanalysis_precip_amt_kg_per_m2"
+names(dfSjOutLagSpike)[6] <- "total_cases_Lag"
 
 spikenb <- glm.nb(Spike ~ 
                   reanalysis_dew_point_temp_k + #9
@@ -87,3 +87,26 @@ names(dfIqOutLag)[6] <- "station_min_temp_c"
 high_temp <- which(dfIqOut$station_min_temp_c > 23)
 high_prec <- which(dfIqOut$reanalysis_precip_amt_kg_per_m2 > 120)
 high_dew <- which(dfIqOut$reanalysis_dew_point_temp_k > 297)
+
+
+
+###### Trees
+
+
+fitspike <- rpart(Spike ~ ., 
+             method="class", data=dfSjOutLagSpike[,c(1:5,7:8,10)])
+
+spikePred <- predict(fitspike, newdata=dfSjOutLagSpike[1:925,])
+
+mean(abs(dfSjOutLag$total_cases[1:925] - rep(0,925)))
+plotComp(c(dfSjOutLagSpike$total_cases[1:925]), 
+         spikePred[,2]*100)
+
+
+plot(fitspike, uniform=T, margin=0.2)
+text(fitspike, use.n=TRUE, all=TRUE, cex=0.8)
+
+dfTsjOutLag$year <- dfTsjOut$year
+dfTsjOutLag$weekofyear <- dfTsjOut$weekofyear
+plotComp(SjApprox$real, 
+         predict(fitspike, newdata=dfTsjOutLag)[,2]*50)

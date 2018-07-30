@@ -29,7 +29,7 @@ mNBSj <- glm.nb(total_cases ~
               station_avg_temp_c +  #11
               station_min_temp_c + #,  #11
               total_cases_Lag, 
-            data=dfSjOutLag[400:700,])
+            data=dfSjOutLag[500:700,])
 
 predNB <- predict(mNBSj, dfSjOutLag[701:925,], type ="response")
 

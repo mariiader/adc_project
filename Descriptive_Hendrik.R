@@ -203,7 +203,7 @@ predDynIq <- predict(mDynLagIq, newdata = dfIqOut, type = "response")
 plotComp(dfSjOut[12:936,24], 
          log(predNBSjLag[1:925]))
 
-plotComp(c(dfSjOut[,24]), 
+plotComp(c(dfSjOut[701:936,24]), 
          predDynSj)
 
 plotComp(c(dfIqOut$total_cases), 
@@ -212,7 +212,7 @@ plotComp(c(dfIqOut$total_cases),
 plotComp(c(dfSjOut[773:936,24]), 
          dfSjOutLagShort$total_cases[14:177])
 
-mean(abs(dfSjOut[,24]-(predDyn)))
+mean(abs(dfSjOut[701:936,24]-(predDynSj)))
 mean(abs(dfSjOut[772:936,24]-(predNBSjLag[761:925])))
 mean(abs(dfSjOut[773:936,24]-dfSjOutLagShort$total_cases[14:177]))
 mean(abs(dfSjOut[773:936,24]-rep(15,164)))
